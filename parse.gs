@@ -24,6 +24,33 @@ function parseQuery(className, params) {
   return result;
 }
 
+// Update an existing Parse object
+// Example:
+// parseUpdate("GameScore", "6K0FnTtGZC", {
+//   "playerName" : "Sean Plott Jr."
+//});
+function parseUpdate(className, objectId, params) {
+  var url = "https://api.parse.com/1/classes/" + className + "/" + objectId;
+  var payload = Utilities.jsonStringify(params);
+  var options = {
+    "method"  : "put",
+    "payload" : payload,
+    "headers" : makeHeaders(),
+    "contentType" : "application/json"
+  };
+  
+  var resp = UrlFetchApp.fetch(url, options);
+  var result;
+  if (resp.getResponseCode() != 200) {
+    Logger.log(resp.getContentText());
+    result = false;
+  } else {
+    result = Utilities.jsonParse(resp.getContentText());
+  }
+  
+  return result;
+}
+
 // Sent POST request to insert into the database
 // Example:
 // parseInsert("GameScore", {
