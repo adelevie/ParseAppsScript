@@ -6,9 +6,11 @@ The Google Apps Script gallery is being finnicky, so for now, this is the easies
 
 1. Copy `parse.gs`.
 2. Create a new Google Spreadsheet.
-3. Tools -> Script Editor
-4. Paste
-5. See `examples.gs` or below:
+3. Create a new sheet and make sure it is first sheet (closes to left side of the screen).
+4. Enter your Parse Application ID in Cell B:1 and your Parse REST API Key in Cell B:2.
+5. Tools -> Script Editor
+6. Paste
+7. See `examples.gs` or below:
 
 ```javascript
 parseInsert("GameScore",{
