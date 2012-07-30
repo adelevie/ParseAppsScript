@@ -24,7 +24,7 @@ results = parseQuery("GameScore", {
 
 var objectId = results[0].objectId;
 parseUpdate("GameScore", objectId, {
-	"playerName" : "Sean Plott III"
+  "playerName" : "Sean Plott III"
 });
 ```
 
