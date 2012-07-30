@@ -2,6 +2,8 @@ Helps your Spreadsheets interact with Parse.com.
 
 ## Quickstart
 
+The Google Apps Script gallery is being finnicky, so for now, this is the easiest way to get started:
+
 1. Copy `parse.gs`.
 2. Create a new Google Spreadsheet.
 3. Tools -> Script Editor
