@@ -39,7 +39,7 @@ Here's a neat trick to run cron tasks for free:
 
 ### Cron example
 
-Let's say you're running a script that will tally the score for a multiplayer game. You have a class called `Game` with the boolean field `scored` and the integer fields `homeScore` and `awayScore`.
+Let's say you're running a script that will tally the score for a multiplayer game. You have a class called `Game` with the boolean field `scored`, the integer fields `homeScore` and `awayScore`, and a string field `winner`.
 
 Let's load some sample data:
 
