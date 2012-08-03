@@ -26,6 +26,10 @@ var objectId = results[0].objectId;
 parseUpdate("GameScore", objectId, {
   "playerName" : "Sean Plott III"
 });
+
+parseFindOrCreateByAttribute("GameScore",{
+  "playerName" : "Sean Plott"
+});
 ```
 
 ## Cron
