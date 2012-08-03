@@ -1,3 +1,26 @@
+// Returns an object with the given attribute key/value pair
+// If the object exists with that attribute, it merely finds and returns it.
+// If the object does not exist, it creates and returns it.
+// Example:
+// obj = parseFindOrCreateByAttribute("GameScore", {
+//   "playerName" : "Sean Plott"
+// });
+// If multiple results are returned from the parseQuery, an array of the results is returned here.
+// If one result is returned from the parseQuery, just that result is returned here.
+function parseFindOrCreateByAttribute(className, attributeNameAndValue) {
+  var obj = parseQuery(className, attributeNameAndValue);
+  var result;
+  if (obj == false) {
+    result = parseInsert(className, attributeNameAndValue);
+  }
+  else { 
+    if (obj.length > 1) { result = obj; } 
+    else                { result = obj[0]; }
+  }
+  
+  return result;
+}
+
 // Query Parse to get results from server
 // Example:
 // var results = parseQuery("GameScore", {
@@ -105,12 +128,3 @@ function makeHeaders() {
   
   return headers;
 }
-
-// Grabs all the rows for a given sheet
-function getRows(sheet) {
-  var sheet = SpreadsheetApp.getActiveSheet();
-  var rows = sheet.getDataRange();
-  var values = rows.getValues();
-  
-  return values;
-};
