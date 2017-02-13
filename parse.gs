@@ -13,11 +13,11 @@ function parseFindOrCreateByAttribute(className, attributeNameAndValue) {
   if (obj == false) {
     result = parseInsert(className, attributeNameAndValue);
   }
-  else { 
-    if (obj.length > 1) { result = obj; } 
+  else {
+    if (obj.length > 1) { result = obj; }
     else                { result = obj[0]; }
   }
-  
+
   return result;
 }
 
@@ -25,25 +25,43 @@ function parseFindOrCreateByAttribute(className, attributeNameAndValue) {
 // Example:
 // var results = parseQuery("GameScore", {
 //   "playerName" : "Sean Plott"
+// }, {
+//   "limit" : 20,
+//   "skip" : 5
 // });
 // results[0].playerName #=> Sean Plott
-function parseQuery(className, params) {
-  var encoded_params = encodeURIComponent(Utilities.jsonStringify(params));
-  var url = "https://api.parse.com/1/classes/" + className + "?where=" + encoded_params;
-  var options = { 
+function parseQuery(className, params, optionals) {
+
+  // encodes query params
+  var encoded_params = encodeURIComponent(JSON.stringify(params));
+
+  // starts up url with query params
+  var url = PARSE_URL + className + "?where=" + encoded_params;
+
+  // if optional params are provided then added them
+  for (var i=0;i<optionals.length;i++){
+    var optional = optionals[i];
+    for (var property in optional) {
+      if (optional.hasOwnProperty(property)) {
+        url += '&' + property + '=' + encodeURIComponent(optional[property]);
+      }
+    }
+  }
+
+  var options = {
     "method"  : "get",
     "headers" : makeHeaders(),
   };
-    
+
   var resp = UrlFetchApp.fetch(url, options);
   var result;
   if (resp.getResponseCode() != 200) {
     Logger.log(resp.getContentText());
     result = false;
   } else {
-    result = Utilities.jsonParse(resp.getContentText())["results"];
+    result = JSON.parse(resp.getContentText())["results"];
   }
-  
+
   return result;
 }
 
@@ -53,24 +71,24 @@ function parseQuery(className, params) {
 //   "playerName" : "Sean Plott Jr."
 //});
 function parseUpdate(className, objectId, params) {
-  var url = "https://api.parse.com/1/classes/" + className + "/" + objectId;
-  var payload = Utilities.jsonStringify(params);
+  var url = PARSE_URL + className + "/" + objectId;
+  var payload = JSON.stringify(params);
   var options = {
     "method"  : "put",
     "payload" : payload,
     "headers" : makeHeaders(),
     "contentType" : "application/json"
   };
-  
+
   var resp = UrlFetchApp.fetch(url, options);
   var result;
   if (resp.getResponseCode() != 200) {
     Logger.log(resp.getContentText());
     result = false;
   } else {
-    result = Utilities.jsonParse(resp.getContentText());
+    result = JSON.parse(resp.getContentText());
   }
-  
+
   return result;
 }
 
@@ -81,50 +99,59 @@ function parseUpdate(className, objectId, params) {
 //   "score"      : "1337"
 // });
 function parseInsert(className, params) {
-  var url = "https://api.parse.com/1/classes/" + className;
-  var payload = Utilities.jsonStringify(params);
+  var url = PARSE_URL + className;
+  var payload = JSON.stringify(params);
   var options = {
     "method"  : "post",
     "payload" : payload,
     "headers" : makeHeaders(),
     "contentType" : "application/json"
   };
-  
+
   var resp = UrlFetchApp.fetch(url, options);
   var result;
   if (resp.getResponseCode() != 200) {
     Logger.log(resp.getContentText());
     result = false;
   } else {
-    result = Utilities.jsonParse(resp.getContentText());
+    result = JSON.parse(resp.getContentText());
   }
-  
+
   return result;
 }
 
-
-// Looks for the first Sheet in a Speadsheet 
-// and gets the first two rows of the 2nd column
-function getAPIKeys() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  SpreadsheetApp.setActiveSheet(ss.getSheets()[0]);
-  var sheet = SpreadsheetApp.getActiveSheet();
-  var rows = getRows(sheet);
-  keys = {
-    "application_id" : rows[0][1],
-    "rest_api_key"   : rows[1][1]
+// Sent DELETE request to delete from the database
+// Example:
+// parseDelete("GameScore","ade04fa");
+function parseDelete(className, objectId) {
+  var url = PARSE_URL + className + '/' + objectId;
+  var options = {
+    "method"  : "delete",
+    "headers" : makeHeaders(),
+    "contentType" : "application/json"
   };
 
-  return keys;
+  var resp = UrlFetchApp.fetch(url, options);
+  var result;
+  if (resp.getResponseCode() != 200) {
+    Logger.log(resp.getContentText());
+    result = false;
+  } else {
+    result = true;
+  }
+
+  return result;
 }
 
 // calls getAPIKeys() and assembles into HTTP headers
 function makeHeaders() {
-  var keys = getAPIKeys();
   var headers = {
-    "X-Parse-Application-Id": keys["application_id"],
-    "X-Parse-REST-API-Key": keys["rest_api_key"]
+    "X-Parse-Application-Id": "ENTER-YOUR-APP-ID",
+    "X-Parse-REST-API-Key": "ENTER-THE-REST-API-KEY-FOR-YOUR-APP"
   };
-  
+
   return headers;
 }
+
+// base url for parse requests
+var PARSE_URL = "https://YOUR-PARSE-SERVER-URL/classes/";
