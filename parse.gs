@@ -203,7 +203,22 @@ function parseDelete(className, objectId) {
 }
 
 /**
- * Returns the header keys to authenticate the calls.
+ * Utility function that creates a pointer object with a classname and objectId filled in.
+ * @param {String} classname the name of the pointed been defined
+ * @param {String} objectId the id of the pointed been defined
+ * @return a pointer object with a classname and objectId filled in.
+ */
+function parseMakePointerWithId(className, objId) {
+  return {
+    "__type": "Pointer", 
+    "className": className,
+    "objectId": objId
+  };
+}
+
+/**
+ * Utility function that returns the header keys to authenticate the calls.
+ * @return an object holding the header keys to authenticate the network calls.
  */
 function makeHeaders() {
   var headers = {
