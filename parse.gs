@@ -45,7 +45,7 @@ function parseQueryAll(className,params,optionals){
 
   while(i > -1){
     optionals.skip = optionals.limit * i;
-    var qa = parseRunQuery(className,params,optionals);
+    var qa = parseQuery(className,params,optionals);
     
     if (qa != null) {
       // concatenate results
